@@ -53,9 +53,18 @@ Your external Argo CD repository can target:
 - `base/` contains reusable manifests for a component
 - `overlays/<env>/` contains environment-specific composition for a component
 
-## Next Components To Add
+## Observability
 
-- operator installation manifests
-- Envoy Gateway manifests
-- observability stack manifests
-- policy and security manifests
+The repository now includes a minimal observability base for `dev`:
+
+- `kube-prometheus-stack` for Prometheus, Alertmanager, and Grafana
+- `loki` in single-binary mode for centralized logs
+
+The current setup is intentionally conservative:
+
+- persistence enabled for dev
+- no public ingress yet
+- no SSO yet
+- no log shipper yet
+
+The next observability component to add is a collector such as Promtail or Alloy.
