@@ -5,6 +5,14 @@ grafana:
   persistence:
     enabled: true
     size: 5Gi
+  additionalDataSources:
+    - name: Loki
+      type: loki
+      uid: loki
+      url: http://loki.observability:3100
+      access: proxy
+      jsonData:
+        maxLines: 1000
 
 alertmanager:
   enabled: true
