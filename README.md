@@ -63,3 +63,4 @@ The current dev observability values cover:
 
 - `kube-prometheus-stack` for Prometheus, Alertmanager, and Grafana
 - `loki` in single-binary mode for centralized logs
+- `alloy` in daemonset mode for pod log collection into Loki
