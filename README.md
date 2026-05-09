@@ -13,6 +13,7 @@ It does not contain Argo CD `Application` or `ApplicationSet` objects.
 ├── docs/
 ├── environments/
 │   ├── dev/
+│   │   ├── base/
 │   │   ├── azure/
 │   │   └── gcp/
 │   ├── uat/
@@ -33,6 +34,8 @@ It does not contain Argo CD `Application` or `ApplicationSet` objects.
 
 Each cluster-specific folder in `environments/` is a deployment entrypoint.
 
+Mirror clusters should share a common environment base and keep only cloud-specific differences in thin overlays.
+
 Your external Argo CD repository can target:
 
 - `environments/dev/azure`
@@ -46,6 +49,7 @@ Your external Argo CD repository can target:
 
 - `platform/` contains reusable platform components
 - `shared/` contains manifests reused across environments
+- `environments/<env>/base` contains the common desired state for mirrored clusters in the same environment
 - `base/` contains reusable manifests for a component
 - `overlays/<env>/` contains environment-specific composition for a component
 
