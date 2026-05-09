@@ -7,6 +7,4 @@ resources:
   - ../../../platform/operators/external-secrets/overlays/dev
   - ../../../platform/networking/gateway-api/overlays/dev
   - ../../../platform/networking/envoy-gateway/overlays/dev
-  - ../../../platform/observability/kube-prometheus-stack/overlays/dev
-  - ../../../platform/observability/loki/overlays/dev
   - ../../../platform/security/kyverno/overlays/dev

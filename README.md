@@ -55,16 +55,11 @@ Your external Argo CD repository can target:
 
 ## Observability
 
-The repository now includes a minimal observability base for `dev`:
+This repository stores observability values and component structure.
+
+Helm-based observability components are deployed by the external Argo CD apps repository rather than rendered through this environment kustomization.
+
+The current dev observability values cover:
 
 - `kube-prometheus-stack` for Prometheus, Alertmanager, and Grafana
 - `loki` in single-binary mode for centralized logs
-
-The current setup is intentionally conservative:
-
-- persistence enabled for dev
-- no public ingress yet
-- no SSO yet
-- no log shipper yet
-
-The next observability component to add is a collector such as Promtail or Alloy.
