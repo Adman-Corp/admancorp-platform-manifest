@@ -22,3 +22,7 @@ spec:
           requestRedirect:
             scheme: https
             statusCode: 301
+      matches:	
+        - path:	
+            type: PathPrefix	
+            value: /
