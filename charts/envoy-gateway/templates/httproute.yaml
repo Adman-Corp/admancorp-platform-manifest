@@ -5,9 +5,13 @@ metadata:
   namespace: networking
 spec:
   parentRefs:
-    - name: admancorp-envoy
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: admancorp-envoy
       sectionName: http-root
-    - name: admancorp-envoy
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: admancorp-envoy
       sectionName: http-apps
   hostnames:
     - {{ .Values.domain }}
