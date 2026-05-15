@@ -17,7 +17,7 @@ kube-prometheus-stack:
       - name: Loki
         type: loki
         uid: loki
-        url: http://loki.observability:3100
+        url: http://platform-loki.argocd:3100
         access: proxy
         jsonData:
           maxLines: 1000
@@ -192,7 +192,7 @@ alloy:
 
         loki.write "default" {
           endpoint {
-            url = "http://loki.observability:3100/loki/api/v1/push"
+            url = "http://platform-loki.argocd:3100/loki/api/v1/push"
           }
         }
   serviceMonitor:
