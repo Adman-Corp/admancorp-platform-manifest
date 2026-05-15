@@ -64,6 +64,8 @@ loki:
     commonConfig:
       replication_factor: 1
     auth_enabled: false
+    limits_config:
+      volume_enabled: true
     storage:
       type: filesystem
       bucketNames:
