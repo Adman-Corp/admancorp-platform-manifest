@@ -1,0 +1,6 @@
+kube-prometheus-stack:
+  enabled: false
+loki:
+  enabled: false
+alloy:
+  enabled: false

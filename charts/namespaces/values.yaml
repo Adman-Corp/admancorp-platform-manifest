@@ -1,0 +1,5 @@
+namespaces:
+  - platform-system
+  - observability
+  - networking
+  - security

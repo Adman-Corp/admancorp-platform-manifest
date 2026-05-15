@@ -1,66 +1,47 @@
 # admancorp-platform-manifest
 
-Platform manifest repository for AdmanCorp's Kubernetes platform.
-
-This repository contains deployable Kubernetes manifests only.
-
-It does not contain Argo CD `Application` or `ApplicationSet` objects.
+Platform manifest repository for AdmanCorp's Kubernetes platform, managed as Helm charts.
 
 ## Structure
 
-```text
+```
 .
-├── docs/
-├── environments/
-│   ├── dev/
-│   │   ├── base/
-│   │   ├── azure/
-│   │   └── gcp/
-│   ├── uat/
-│   │   ├── azure/
-│   │   └── gcp/
-│   └── prod/
-│       ├── azure/
-│       └── gcp/
-├── platform/
-│   ├── networking/
-│   ├── observability/
-│   ├── operators/
-│   └── security/
-└── shared/
+├── charts/
+│   ├── admancorp-platform/   # Umbrella chart composing all components
+│   ├── namespaces/           # Shared Kubernetes namespaces
+│   ├── cert-manager/         # cert-manager operator
+│   ├── external-secrets/     # External Secrets operator
+│   ├── envoy-gateway/        # Envoy Gateway + Gateway API configuration
+│   ├── kyverno/              # Kyverno policy engine
+│   ├── kube-prometheus-stack/ # Prometheus + Grafana + Alertmanager
+│   ├── loki/                 # Loki log aggregation
+│   └── alloy/                # Grafana Alloy log collector
+└── docs/
 ```
 
 ## Usage
 
-Each cluster-specific folder in `environments/` is a deployment entrypoint.
+The umbrella chart `charts/admancorp-platform` composes all components. Deploy with environment-specific values:
 
-Mirror clusters should share a common environment base and keep only cloud-specific differences in thin overlays.
+```bash
+helm dependency update charts/admancorp-platform
 
-Your external Argo CD repository can target:
+# Dev
+helm install platform charts/admancorp-platform -f charts/admancorp-platform/values-dev-azure.yaml
+helm install platform charts/admancorp-platform -f charts/admancorp-platform/values-dev-gcp.yaml
 
-- `environments/dev/azure`
-- `environments/dev/gcp`
-- `environments/uat/azure`
-- `environments/uat/gcp`
-- `environments/prod/azure`
-- `environments/prod/gcp`
+# UAT
+helm install platform charts/admancorp-platform -f charts/admancorp-platform/values-uat-azure.yaml
+helm install platform charts/admancorp-platform -f charts/admancorp-platform/values-uat-gcp.yaml
 
-## Conventions
-
-- `platform/` contains reusable platform components
-- `shared/` contains manifests reused across environments
-- `environments/<env>/base` contains the common desired state for mirrored clusters in the same environment
-- `base/` contains reusable manifests for a component
-- `overlays/<env>/` contains environment-specific composition for a component
+# Prod
+helm install platform charts/admancorp-platform -f charts/admancorp-platform/values-prod-azure.yaml
+helm install platform charts/admancorp-platform -f charts/admancorp-platform/values-prod-gcp.yaml
+```
 
 ## Observability
 
-This repository stores observability values and component structure.
+Observability components (kube-prometheus-stack, loki, alloy) are included in the umbrella chart with conditions that default to disabled. Enable them per environment via values:
 
-Helm-based observability components are deployed by the external Argo CD apps repository rather than rendered through this environment kustomization.
-
-The current dev observability values cover:
-
-- `kube-prometheus-stack` for Prometheus, Alertmanager, and Grafana
-- `loki` in single-binary mode for centralized logs
-- `alloy` in daemonset mode for pod log collection into Loki
+- **dev**: all observability disabled
+- **uat/prod**: all observability enabled

@@ -1,0 +1,10 @@
+apiVersion: v2
+name: envoy-gateway
+description: Envoy Gateway with custom Gateway/TLS resources for AdmanCorp platform
+type: application
+version: 1.0.0
+
+dependencies:
+  - name: gateway-helm
+    version: "v1.2.*"
+    repository: oci://docker.io/envoyproxy/gateway-helm

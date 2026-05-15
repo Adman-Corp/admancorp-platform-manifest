@@ -1,0 +1,10 @@
+envoy-gateway:
+  domain: admancorp.com
+  envoyServiceHostname: gcp-gw.admancorp.com
+
+kube-prometheus-stack:
+  enabled: true
+loki:
+  enabled: true
+alloy:
+  enabled: true

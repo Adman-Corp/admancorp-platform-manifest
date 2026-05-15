@@ -1,0 +1,10 @@
+apiVersion: v2
+name: kyverno
+description: Kyverno policy engine for AdmanCorp platform
+type: application
+version: 1.0.0
+
+dependencies:
+  - name: kyverno
+    version: "3.3.*"
+    repository: https://kyverno.github.io/kyverno

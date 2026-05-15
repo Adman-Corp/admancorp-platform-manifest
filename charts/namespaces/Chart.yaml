@@ -1,0 +1,5 @@
+apiVersion: v2
+name: namespaces
+description: Shared Kubernetes namespaces for the AdmanCorp platform
+type: application
+version: 1.0.0

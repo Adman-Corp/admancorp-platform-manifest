@@ -2,10 +2,11 @@
 
 ## General
 
-- Use `kustomize` as the default composition mechanism
-- Keep one platform capability per folder
-- Keep reusable manifests in `base/`
-- Put environment-specific adjustments in `overlays/dev`, `overlays/uat`, and `overlays/prod`
+- Use Helm charts as the composition and deployment mechanism
+- Keep one platform component per chart in `charts/`
+- The umbrella chart `charts/admancorp-platform` composes all components together
+- Environment and cloud-specific variations are expressed via values files
+- Per-component values defaults live in each chart's `values.yaml`; overrides flow through the umbrella chart's values files
 
 ## Secrets
 
@@ -19,10 +20,10 @@ Store only:
 
 ## GitOps Entry Points
 
-Argo CD should point to the environment directories, not directly to individual components, unless you intentionally want smaller applications.
+Argo CD should point to the umbrella chart directory with the appropriate values file for each cluster.
 
 ## Mirror Clusters
 
-- When Azure and GCP clusters are meant to mirror the same environment, compose the shared desired state in `environments/<env>/base`
-- Keep `environments/<env>/azure` and `environments/<env>/gcp` as thin overlays with only provider-specific changes
-- Prefer a single shared base over copying full environment compositions between clouds
+- When Azure and GCP clusters mirror the same environment, they share the same values for domain, component enablement, etc.
+- Only the `envoyServiceHostname` (external-dns annotation) differs per cloud
+- Keep cloud-specific differences in the values file, not in separate overlay trees

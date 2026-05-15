@@ -1,0 +1,10 @@
+envoy-gateway:
+  domain: uat.admancorp.com
+  envoyServiceHostname: az-gw.uat.admancorp.com
+
+kube-prometheus-stack:
+  enabled: true
+loki:
+  enabled: true
+alloy:
+  enabled: true
