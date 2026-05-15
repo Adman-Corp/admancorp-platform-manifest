@@ -8,24 +8,24 @@ dependencies:
   - name: namespaces
     version: "1.0.0"
     repository: file://../namespaces
-  - name: external-secrets
-    version: "1.0.0"
-    repository: file://../external-secrets
   - name: envoy-gateway
     version: "1.0.0"
     repository: file://../envoy-gateway
+  - name: external-secrets
+    version: "0.14.4"
+    repository: https://charts.external-secrets.io
   - name: kyverno
-    version: "1.0.0"
-    repository: file://../kyverno
+    version: "3.3.9"
+    repository: https://kyverno.github.io/kyverno
   - name: kube-prometheus-stack
-    version: "1.0.0"
-    repository: file://../kube-prometheus-stack
+    version: "69.8.2"
+    repository: https://prometheus-community.github.io/helm-charts
     condition: kube-prometheus-stack.enabled
   - name: loki
-    version: "1.0.0"
-    repository: file://../loki
+    version: "6.28.0"
+    repository: https://grafana.github.io/helm-charts
     condition: loki.enabled
   - name: alloy
-    version: "1.0.0"
-    repository: file://../alloy
+    version: "0.12.6"
+    repository: https://grafana.github.io/helm-charts
     condition: alloy.enabled

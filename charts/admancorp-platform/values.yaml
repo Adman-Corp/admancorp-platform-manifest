@@ -1,6 +1,199 @@
+external-secrets:
+  installCRDs: true
+
+kyverno:
+  installCRDs: true
+
 kube-prometheus-stack:
   enabled: false
+  grafana:
+    enabled: true
+    adminPassword: changeme-dev-only
+    defaultDashboardsTimezone: utc
+    persistence:
+      enabled: true
+      size: 5Gi
+    additionalDataSources:
+      - name: Loki
+        type: loki
+        uid: loki
+        url: http://loki.observability:3100
+        access: proxy
+        jsonData:
+          maxLines: 1000
+  alertmanager:
+    enabled: true
+    alertmanagerSpec:
+      replicas: 1
+      storage:
+        volumeClaimTemplate:
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 2Gi
+  prometheus:
+    enabled: true
+    prometheusSpec:
+      replicas: 1
+      retention: 7d
+      storageSpec:
+        volumeClaimTemplate:
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 10Gi
+  kubeEtcd:
+    enabled: false
+  coreDns:
+    enabled: true
+  kubeControllerManager:
+    enabled: false
+  kubeScheduler:
+    enabled: false
+  kubeProxy:
+    enabled: true
+
 loki:
   enabled: false
+  deploymentMode: SingleBinary
+  loki:
+    commonConfig:
+      replication_factor: 1
+    auth_enabled: false
+    storage:
+      type: filesystem
+      bucketNames:
+        chunks: chunks
+        ruler: ruler
+        admin: admin
+    schemaConfig:
+      configs:
+        - from: "2024-01-01"
+          store: tsdb
+          object_store: filesystem
+          schema: v13
+          index:
+            prefix: loki_index_
+            period: 24h
+  singleBinary:
+    replicas: 1
+    persistence:
+      enabled: true
+      size: 10Gi
+  chunksCache:
+    enabled: false
+  resultsCache:
+    enabled: false
+  backend:
+    replicas: 0
+  read:
+    replicas: 0
+  write:
+    replicas: 0
+  gateway:
+    enabled: false
+  test:
+    enabled: false
+  monitoring:
+    dashboards:
+      enabled: false
+    rules:
+      enabled: false
+    selfMonitoring:
+      enabled: false
+  minio:
+    enabled: false
+
 alloy:
   enabled: false
+  crds:
+    create: false
+  controller:
+    type: daemonset
+  alloy:
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        memory: 256Mi
+    configMap:
+      content: |-
+        logging {
+          level  = "info"
+          format = "logfmt"
+        }
+
+        discovery.kubernetes "pod" {
+          role = "pod"
+
+          selectors {
+            role  = "pod"
+            field = "spec.nodeName=" + coalesce(sys.env("HOSTNAME"), constants.hostname)
+          }
+        }
+
+        discovery.relabel "pod_logs" {
+          targets = discovery.kubernetes.pod.targets
+
+          rule {
+            source_labels = ["__meta_kubernetes_namespace"]
+            action = "replace"
+            target_label = "namespace"
+          }
+
+          rule {
+            source_labels = ["__meta_kubernetes_pod_name"]
+            action = "replace"
+            target_label = "pod"
+          }
+
+          rule {
+            source_labels = ["__meta_kubernetes_pod_container_name"]
+            action = "replace"
+            target_label = "container"
+          }
+
+          rule {
+            source_labels = ["__meta_kubernetes_pod_label_app_kubernetes_io_name"]
+            action = "replace"
+            target_label = "app"
+          }
+
+          rule {
+            source_labels = ["__meta_kubernetes_namespace", "__meta_kubernetes_pod_container_name"]
+            action = "replace"
+            target_label = "job"
+            separator = "/"
+            replacement = "$1"
+          }
+        }
+
+        loki.source.kubernetes "pod_logs" {
+          targets    = discovery.relabel.pod_logs.output
+          forward_to = [loki.process.pod_logs.receiver]
+        }
+
+        loki.process "pod_logs" {
+          stage.static_labels {
+            values = {
+              cluster = "dev",
+            }
+          }
+
+          forward_to = [loki.write.default.receiver]
+        }
+
+        loki.write "default" {
+          endpoint {
+            url = "http://loki.observability:3100/loki/api/v1/push"
+          }
+        }
+  serviceMonitor:
+    enabled: true
+    additionalLabels:
+      release: kube-prometheus-stack

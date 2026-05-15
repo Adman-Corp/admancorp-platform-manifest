@@ -3,8 +3,10 @@ envoy-gateway:
   envoyServiceHostname: gcp-gw.dev.admancorp.com
 
 kube-prometheus-stack:
-  enabled: false
+  enabled: true
+
 loki:
-  enabled: false
+  enabled: true
+
 alloy:
-  enabled: false
+  enabled: true
