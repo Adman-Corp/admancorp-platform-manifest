@@ -1,3 +1,12 @@
+environment: dev
+cloud: gcp
+clusterSecretStore:
+  enabled: true
+  provider: gcp
+  gcp:
+    clusterLocation: ""   # zone ex: us-central1-a
+    clusterName: "mc-gke" # var.cluster_name (default)
+
 envoy-gateway:
   domain: dev.admancorp.com
   envoyServiceHostname: gcp-gw.dev.admancorp.com

@@ -1,6 +1,9 @@
 external-secrets:
   installCRDs: true
 
+clusterSecretStore:
+  enabled: false
+
 kyverno:
   installCRDs: true
 

@@ -1,3 +1,11 @@
+environment: prod
+cloud: azure
+clusterSecretStore:
+  enabled: true
+  provider: azure
+  azure:
+    vaultUrl: "https://odoo-kv.vault.azure.net"
+
 envoy-gateway:
   domain: admancorp.com
   envoyServiceHostname: az-gw.admancorp.com

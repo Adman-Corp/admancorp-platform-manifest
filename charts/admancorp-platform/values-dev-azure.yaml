@@ -1,3 +1,9 @@
+environment: dev
+cloud: azure
+clusterSecretStore:
+  enabled: true
+  provider: azure
+
 envoy-gateway:
   domain: dev.admancorp.com
   envoyServiceHostname: az-gw.dev.admancorp.com
